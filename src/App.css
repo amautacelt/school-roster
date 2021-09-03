@@ -1,3 +1,62 @@
+@import url('https://fonts/googleapis.com/css?family=Roboto&display=swap');
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Roboto, sans-serif;
+  max-width: 600px;
+  padding: 2rem;
+}
+
+header {
+  margin-bottom: 2rem;
+}
+
+input, select {
+  padding: 0.5rem 0.25rem;
+  border: 1px solid #ccc;
+}
+
+.search-and-filter {
+  display: flex;
+  justify-content: space-between;
+}
+
+.fa-search {
+  margin-left: 0.5rem;
+}
+
+.people-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 2rem;
+}
+
+.people-table th {
+  text-align: left;
+}
+
+th, td {
+  padding: 0.5rem 0.25rem;
+}
+
+.people-table thead {
+  border-bottom: 1px solid #ccc;
+}
+
+.add-new {
+  max-width: 300px;
+}
+
+.add-new input, .add-new select{
+  display: block;
+  margin-bottom: 0.5rem;
+  width: 100%;
+}
+
+
 /* .App {
   text-align: center;
 }
