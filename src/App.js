@@ -12,8 +12,12 @@ class App extends Component {
       firstName: "",
       lastName: "",
       role: "student"
-    }
+    },
+    searchTerm: "",
+    currentFilter: "all",
+    currentSort: "",
   }
+
 
   componentDidMount() {
     fetch(apiUrl)
@@ -22,6 +26,7 @@ class App extends Component {
         this.setState({people})
       })
   }
+
   updateNewPerson = event => {
     const key = event.target.name
     const value = event.target.value
@@ -30,6 +35,7 @@ class App extends Component {
       return state
     })
   }
+
   addNewPerson = event => {
     event.preventDefault()
 
@@ -44,7 +50,7 @@ class App extends Component {
       state.newPerson = {
         firstName: "",
         lastName: "",
-        role: "student"
+        role: "student",
       }
       return state
     })
@@ -56,8 +62,58 @@ class App extends Component {
       },
       body: JSON.stringify(newPerson)
     }).catch(error => console.error(error.message))
-
   }
+
+
+  displayedPeople = () => {
+    return this.state.people.filter(person => {
+      if (!this.state.searchTerm){
+        return true
+      } else {
+          return (
+            person.firstName.toLowerCase().includes(this.state.searchTerm.toLowerCase())
+              || person.lastName.toLowerCase().includes(this.state.searchTerm.toLowerCase())
+          )
+      }
+    }).filter(person => {
+      if (this.state.currentFilter == "all"){
+        return true
+      } else {
+        return person.role === this.state.currentFilter
+      }
+    }).sort((a, b) => {
+      if (!this.state.currentSort) {
+        return 0
+      } else {
+        return a[this.state.currentSort] >= b[this.state.currentSort]
+          ? 1
+          : -1
+      }
+    })
+  }
+
+
+  updateSearchTerm = event => {
+    this.setState({
+      searchTerm: event.target.value
+    })
+  }
+
+
+  updateCurrentFilter = event => {
+    this.setState({
+      currentFilter: event.target.value
+    })
+  }
+
+
+  updateCurrentSort = sortCriterion => {
+    this.setState({
+      currentSort: sortCriterion
+    })
+  }
+
+
   render() {
     return (
       <div className="App">
@@ -66,15 +122,15 @@ class App extends Component {
           <h1>Student Roster</h1>
           <div className="search-and-filter">
             <form className="search">
-              <input type="text" name="search-term" />
+              <input onChange={this.updateSearchTerm} type="text" name="search-term" />
               <i className="fa fa-search"></i>
             </form>
             <form className="filter">
-              <select>
+              <select onChange={this.updateCurrentFilter} value={this.state.currentFilter}>
                 <option value="all">Show all</option>
-                <option value="students">Show only students</option>
-                <option value="teachers">Show only teachers</option>
-                <option value="administrators">Show only admins</option>
+                <option value="student">Show only students</option>
+                <option value="teacher">Show only teachers</option>
+                <option value="administrator">Show only admins</option>
               </select>
             </form>
           </div>
@@ -84,14 +140,26 @@ class App extends Component {
           <table className="people-table">
             <thead>
               <tr>
-                <th>First Name <button> <i className="fa fa-caret-down"> </i> </button> </th>
-                <th>Last Name <button> <i className="fa fa-caret-down"> </i> </button> </th>
-                <th>Role <button> <i className="fa fa-caret-down"> </i> </button> </th>
+                <th>First Name 
+                  <button className={this.state.currentSort === "firstName" ? "active-sort" : undefined} onClick={() => {this.updateCurrentSort("firstName")}}> 
+                    <i className="fa fa-caret-down"> </i> 
+                  </button> 
+                </th>
+                <th>Last Name 
+                  <button className={this.state.currentSort === "lastName" ? "active-sort" : undefined} onClick={() => {this.updateCurrentSort("lastName")}}> 
+                    <i className="fa fa-caret-down"> </i> 
+                  </button> 
+                </th>
+                <th>Role 
+                  <button className={this.state.currentSort === "role" ? "active-sort" : undefined} onClick={() => {this.updateCurrentSort("role")}}> 
+                    <i className="fa fa-caret-down"> </i> 
+                  </button> 
+                </th>
               </tr>
             </thead>
             <tbody>
               {
-                this.state.people.map(person => {
+                this.displayedPeople().map(person => {
                   return (
                     <tr>
                       <td>{person.firstName}</td>

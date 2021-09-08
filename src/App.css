@@ -56,6 +56,11 @@ th, td {
   width: 100%;
 }
 
+.active-sort {
+  background-color: hsl(220, 30%, 50%);
+  border: none;
+  color: white;
+}
 
 /* .App {
   text-align: center;
