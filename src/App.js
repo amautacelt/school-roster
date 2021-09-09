@@ -3,6 +3,9 @@ import './App.css';
 
 import 'font-awesome/css/font-awesome.min.css'
 
+import AddNewPerson from './AddNewPerson'
+import Search from './Search';
+
 const apiUrl = "https://react-build-and-burn.herokuapp.com"
 
 class App extends Component {
@@ -27,31 +30,10 @@ class App extends Component {
       })
   }
 
-  updateNewPerson = event => {
-    const key = event.target.name
-    const value = event.target.value
-    this.setState(state => {
-      state.newPerson[key] = value
-      return state
-    })
-  }
 
-  addNewPerson = event => {
-    event.preventDefault()
-
-    const newPerson = {
-      firstName: this.state.newPerson.firstName,
-      lastName: this.state.newPerson.lastName,
-      role: this.state.newPerson.role
-    }
-
+  addNewPerson = newPerson => {
     this.setState(state => {
       state.people = [...state.people, newPerson]
-      state.newPerson = {
-        firstName: "",
-        lastName: "",
-        role: "student",
-      }
       return state
     })
 
@@ -121,10 +103,9 @@ class App extends Component {
         <header>
           <h1>Student Roster</h1>
           <div className="search-and-filter">
-            <form className="search">
-              <input onChange={this.updateSearchTerm} type="text" name="search-term" />
-              <i className="fa fa-search"></i>
-            </form>
+
+            <Search searchTerm={this.state.searchTerm} updateSearchTerm={this.updateSearchTerm} />
+
             <form className="filter">
               <select onChange={this.updateCurrentFilter} value={this.state.currentFilter}>
                 <option value="all">Show all</option>
@@ -172,31 +153,8 @@ class App extends Component {
             </tbody>
           </table>
 
-          <form onSubmit={this.addNewPerson} className="add-new">
-            <h2>Add New Person</h2>
-            <input 
-              onChange={this.updateNewPerson} 
-              required 
-              type="text" 
-              name="firstName" 
-              placeholder="First Name" 
-              value={this.state.newPerson.firstName} 
-            />
-            <input 
-              onChange={this.updateNewPerson}
-              required 
-              type="text" 
-              name="lastName" 
-              placeholder="Last Name" 
-              value={this.state.newPerson.lastName} 
-            />
-            <select onChange={this.updateNewPerson} required name="role" value={this.state.newPerson.role}>
-              <option value="student">Student</option>
-              <option value="teacher">Teacher</option>
-              <option value="administrator">Administrator</option>
-            </select>
-            <input type="submit" value="Add Person" />
-          </form>
+          <AddNewPerson addNewPerson={this.addNewPerson} />
+
         </main>
 
       </div>
